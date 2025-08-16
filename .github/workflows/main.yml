@@ -1,0 +1,24 @@
+name: Buat Video dari Banyak Lagu (Tanpa Upscale)
+
+on: [workflow_dispatch]
+
+jobs:
+  gabung-dan-buat-video:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Gabung semua lagu jadi satu file audio
+        run: |
+          ls *.mp3 > list_lagu.txt
+          ffmpeg -f concat -safe 0 -i list_lagu.txt -c copy lagu_gabungan.mp3
+
+      - name: Buat video dari audio gabungan dan video latar
+        run: ffmpeg -i video_latar.mp4 -i lagu_gabungan.mp3 -map 0:v -map 1:a -c:v copy -shortest video_final.mp4
+
+      - name: Simpan hasil video
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-final
+          path: video_final.mp4
