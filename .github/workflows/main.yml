@@ -14,7 +14,7 @@ jobs:
 
       - name: Gabung semua lagu jadi satu file audio
         run: |
-          ls *.mp3 > list_lagu.txt
+          for f in *.mp3; do echo "file '$f'" >> list_lagu.txt; done
           ffmpeg -f concat -safe 0 -i list_lagu.txt -c copy lagu_gabungan.mp3
 
       - name: Buat video dari audio gabungan dan video latar
